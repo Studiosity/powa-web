@@ -46,6 +46,26 @@ def parse_file(filepath):
         sys.exit(-1)
 
 
+def parse_environment():
+    """
+    Optionally injects environment variable driven configuration into `Options`
+    """
+    if options.servers:
+        for server, config in options.servers.items():
+            # Only set a username and password if username is not present and password is not present
+            # Additionally, only set a password if the server is a production yak.run server, and if
+            # both a username and password have actually been provided via environment variables.
+            if (
+                not (config.get("username") or config.get("password"))
+                and config["host"].startswith("prd-pgl-")
+                and config["host"].endswith(".yak.run")
+                and (db_username := os.getenv("DB_USERNAME"))
+                and (db_password := os.getenv("DB_PASSWORD"))
+            ):
+                config["username"] = db_username
+                config["password"] = db_password
+
+
 def parse_options():
     define("servers", type=dict, help="Not available from the command line.")
     for possible_config in CONF_LOCATIONS:

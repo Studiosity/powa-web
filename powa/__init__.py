@@ -13,7 +13,7 @@ __VERSION_NUM__ = [int(part) for part in (ver_tmp.split('.'))]
 POWA_ROOT = os.path.dirname(__file__)
 
 from tornado.web import Application, URLSpec as U
-from powa.options import parse_options
+from powa.options import parse_options, parse_environment
 from tornado.options import options
 from powa import ui_modules, ui_methods
 from powa.framework import AuthHandler
@@ -42,6 +42,7 @@ def make_app(**kwargs):
     Parse the config file and instantiate a tornado app.
     """
     parse_options()
+    parse_environment()
 
     URLS = [
         U(r"%slogin/" % options.url_prefix, LoginHandler, name="login"),
