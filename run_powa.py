@@ -5,7 +5,8 @@ from powa import make_app
 from tornado.options import options
 
 if __name__ == "__main__":
-    application = make_app(debug=True, gzip=True, compress_response=True)
+    application = make_app(debug=False, gzip=True, compress_response=True)
+    # application.listen(8888)
     application.listen(options.port, address=options.address)
     logger = logging.getLogger("tornado.application")
     logger.info(
