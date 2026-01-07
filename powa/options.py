@@ -70,14 +70,11 @@ def parse_environment():
     Optionally injects environment variable driven configuration into `Options`
     """
     if options.servers:
-        for server, config in options.servers.items():
-            # Only set a username and password if username is not present and password is not present
-            # Additionally, only set a password if the server is a production yak.run server, and if
-            # both a username and password have actually been provided via environment variables.
+        for config in options.servers.values():
+            # Only set a username and password if they're available, and if no
+            # username or password already exist within the config
             if (
                 not (config.get("username") or config.get("password"))
-                and config["host"].startswith("prd-pgl-")
-                and config["host"].endswith(".yak.run")
                 and (db_username := os.getenv("DB_USERNAME"))
                 and (db_password := os.getenv("DB_PASSWORD"))
             ):
