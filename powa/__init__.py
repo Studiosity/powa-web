@@ -15,7 +15,7 @@ __VERSION_NUM__ = [int(part) for part in (ver_tmp.split("."))]
 POWA_ROOT = os.path.dirname(__file__)
 
 # Import from powa.options must go before tornado.options
-from powa.options import parse_options  # noqa: I001
+from powa.options import parse_options, parse_environment  # noqa: I001
 from tornado.options import options
 from tornado.web import Application
 from tornado.web import URLSpec as U
@@ -61,6 +61,7 @@ def make_app(**kwargs):
     Parse the config file and instantiate a tornado app.
     """
     parse_options()
+    parse_environment()
 
     URLS = [
         U(r"%slogin/" % options.url_prefix, LoginHandler, name="login"),
